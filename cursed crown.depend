@@ -1,0 +1,96 @@
+# depslib dependency file v1.0
+1401557396 source:/home/baumann/Projets/Crown/main.cpp
+	<SFML/Graphics.hpp>
+	<iostream>
+	<cmath>
+	"map.h"
+	"anim.h"
+	"hero.h"
+	"editeur.h"
+	"constantes.h"
+	"matrix.h"
+
+1401734510 /home/baumann/Projets/Crown/map.h
+	<iostream>
+	"parser.h"
+
+1401364112 /home/baumann/Projets/Crown/parser.h
+	<fstream>
+
+1401033772 /home/baumann/Projets/Crown/anim.h
+
+1401031986 /home/baumann/Projets/Crown/hero.h
+	"anim.h"
+	"map.h"
+
+1401481778 /home/baumann/Projets/Crown/editeur.h
+	<SFML/Graphics.hpp>
+	"map.h"
+	"fenetre.h"
+	"parser.h"
+
+1401572436 /home/baumann/Projets/Crown/fenetre.h
+
+1401572524 /home/baumann/Projets/Crown/constantes.h
+
+1401031188 /home/baumann/Projets/Crown/matrix.h
+	<SFML/Graphics.hpp>
+	"constantes.h"
+
+1401033784 source:/home/baumann/Projets/Crown/anim.cpp
+	<iostream>
+	<SFML/Graphics.hpp>
+	"anim.h"
+	"constantes.h"
+
+1401610934 source:/home/baumann/Projets/Crown/boite.cpp
+	<iostream>
+	<vector>
+	<SFML/Graphics.hpp>
+	"constantes.h"
+	"boite.h"
+
+1401574460 /home/baumann/Projets/Crown/boite.h
+
+1403823516 source:/home/baumann/Projets/Crown/editeur.cpp
+	<SFML/Graphics.hpp>
+	"editeur.h"
+	"map.h"
+	"constantes.h"
+	"matrix.h"
+
+1403823516 source:/home/baumann/Projets/Crown/fenetre.cpp
+	<iostream>
+	<vector>
+	<SFML/Graphics.hpp>
+	"fenetre.h"
+	"constantes.h"
+
+1403823589 source:/home/baumann/Projets/Crown/hero.cpp
+	<iostream>
+	<cmath>
+	<SFML/Graphics.hpp>
+	"matrix.h"
+	"hero.h"
+	"constantes.h"
+
+1401371622 source:/home/baumann/Projets/Crown/map.cpp
+	<iostream>
+	<SFML/Graphics.hpp>
+	"map.h"
+	"constantes.h"
+
+1401031188 source:/home/baumann/Projets/Crown/matrix.cpp
+	<SFML/Graphics.hpp>
+	<iostream>
+	<cmath>
+	"matrix.h"
+	"constantes.h"
+
+1403823516 source:/home/baumann/Projets/Crown/parser.cpp
+	<iostream>
+	<vector>
+	<string>
+	<fstream>
+	"parser.h"
+
