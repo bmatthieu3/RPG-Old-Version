@@ -1,0 +1,20 @@
+Data//Competences//Perception.png
+
+Data//Interface//icones//perception.png
+255 255 255
+192
+192
+20
+800
+
+60
+0.2
+0
+2
+7
+0
+10
+30
+Perception des precurseurs #
+Chance de monter les caracteristiques de votre personnage ou allie pendant 30 sec. Sort cible #
+$

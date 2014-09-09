@@ -1,0 +1,20 @@
+Data//Competences//soin.png
+
+Data//Interface//icones//soin.png
+255 255 255
+192
+192
+25
+1000
+
+60
+5
+3
+4
+5
+0
+5
+40
+Soin #
+Soigne votre personnage ou la cible alliee. Sort cible #
+$

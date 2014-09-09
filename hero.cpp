@@ -6,12 +6,25 @@
 #include "matrix.h"
 #include "hero.h"
 #include "constantes.h"
+#include "pathfinder.h"
+#include "entite.h"
 
-Personnage::Personnage(Carte& carte) : _vie(100), _mana(100)
+Personnage::Personnage()
 {
+
+}
+
+Personnage::Personnage(const std::string nom, Carte* carte, const sf::Vector2< int > pos)
+{
+    _profondeur = 72;
+
+    _carte = carte;
+
+    _nom = nom;
+
     for(unsigned int i = 0; i < 8; i++)
     {
-        anim _anim("Data/Personnage/heros_running.png", 96, 96, sf::Vector2i(ORIGINE_X - WIDTH_PERSONNAGE/2, ORIGINE_Y - HEIGHT_PERSONNAGE/2), 8, i*8, sf::milliseconds(8*80));
+        Anim* _anim = new Anim("Data/Personnage/heros_run.png", 96, 96, sf::Vector2< int >(WINDOW_WIDTH/2 - WIDTH_PERSONNAGE/2, WINDOW_HEIGHT/2 - HEIGHT_PERSONNAGE/2), 8, i*8, sf::milliseconds(8*80));
 
         _anims.push_back(_anim);
 
@@ -19,7 +32,7 @@ Personnage::Personnage(Carte& carte) : _vie(100), _mana(100)
 
     for(unsigned int i = 0; i < 8; i++)
     {
-        anim _anim_stopped("Data/Personnage/heros_stopped.png", 96, 96, sf::Vector2i(ORIGINE_X - WIDTH_PERSONNAGE/2, ORIGINE_Y - HEIGHT_PERSONNAGE/2), 1, i, sf::milliseconds(100));
+        Anim* _anim_stopped = new Anim("Data/Personnage/heros_stop.png", 96, 96, sf::Vector2< int >(WINDOW_WIDTH/2 - WIDTH_PERSONNAGE/2, WINDOW_HEIGHT/2 - HEIGHT_PERSONNAGE/2), 1, i, sf::milliseconds(100));
 
         _anims.push_back(_anim_stopped);
 
@@ -27,121 +40,63 @@ Personnage::Personnage(Carte& carte) : _vie(100), _mana(100)
 
     for(unsigned int i = 0; i < 8; i++)
     {
-        anim _anim_attack("Data/Personnage/heros_attack.png", 96, 96, sf::Vector2i(ORIGINE_X - WIDTH_PERSONNAGE/2, ORIGINE_Y - HEIGHT_PERSONNAGE/2), 13, i*13, sf::milliseconds(13*30));
+        Anim* _anim_attack = new Anim("Data/Personnage/heros_attaque.png", 96, 96, sf::Vector2< int >(WINDOW_WIDTH/2 - WIDTH_PERSONNAGE/2, WINDOW_HEIGHT/2 - HEIGHT_PERSONNAGE/2), 13, i*13, sf::milliseconds(13*30));
 
         _anims.push_back(_anim_attack);
 
     }
 
     _actu = _anims[0];
-    _statut = 0;
 
-    sf::Vector2i origine = carte.getTile(0,0).getPosition();
-    origine.x += WIDTH_TILE/2;
+    _pos = pos;
 
-    _pos = CartesienAIsometrique(origine, _actu.getPosition());
+    _statut = DEBOUT;
 
-    _cible.x = 0;
-    _cible.y = 0;
+    _direction = B;
+
+    sf::Vector2< int > pos_ecran = isometriqueVersCartesien(_carte, _pos);
+    pos_ecran.x -= _carte->getTile(0, 0).getPosition().x;
+    pos_ecran.y -= _carte->getTile(0, 0).getPosition().y;
+
+    _carte->bouger(-pos_ecran);
+
+    _distanceLimiteAttaque = 1.0f; // 1 métre
+
+    _vitesse = 2.0f;
+
+    _champVision = 10;
+
+    _chemin.push_back(_pos);
+
+    _competence_actu = NULL;
 }
 
 Personnage::~Personnage()
 {
-
+    _carte = NULL;
 }
 
-void Personnage::afficher(sf::RenderWindow* window)
+void Personnage::deplacer(const sf::Vector2< int > arrive)
 {
-    _actu.afficher(window);
-}
+    _chemin.clear();
 
-void Personnage::deplacer(const sf::Vector2i cible)
-{
-    _cible = cible;
-    limiteCarte(_cible);
+    _chemin.push_back(arrive);
 
     _statut = DEPLACE;
 }
 
-void Personnage::actualiser(Carte& carte)
+void Personnage::lancerCompetence(const sf::Vector2< int > mouse_clic)
 {
-    sf::Vector2f u;
-
-    int direction = B;
-
-    if(_pos.x > _cible.x)
-        direction = HD;
-    else if(_pos.x < _cible.x)
-        direction = BG;
-
-    if(_pos.y > _cible.y)
-        direction = HG;
-    else if(_pos.y < _cible.y)
-        direction = BD;
-
-    if(_pos.x > _cible.x && _pos.y > _cible.y)
-        direction = H;
-    else if(_pos.x < _cible.x && _pos.y < _cible.y)
-        direction = B;
-    else if(_pos.x > _cible.x && _pos.y < _cible.y)
-        direction = D;
-    else if(_pos.x < _cible.x && _pos.y > _cible.y)
-        direction = G;
-
-    if(_pos != _cible && _statut == DEPLACE)
+    if(!_competence_actu->getActive())
     {
-        // deplacement de la map
-        switch(direction)
-        {
-            case B:
-                u.y -= 2*5;
-            break;
-            case H:
-                u.y += 2*5;
-            break;
-            case D:
-                u.x -= 2*5;
-            break;
-            case G:
-                u.x += 2*5;
-            break;
-            case BG:
-                u.y -= 2*sqrt(5);
-                u.x += 4*sqrt(5);
-            break;
-            case HG:
-                u.y += 2*sqrt(5);
-                u.x += 4*sqrt(5);
-            break;
-            case BD:
-                u.y -= 2*sqrt(5);
-                u.x -= 4*sqrt(5);
-            break;
-            case HD:
-                u.y += 2*sqrt(5);
-                u.x -= 4*sqrt(5);
-            break;
-            default:
-            break;
-        }
+        _competence_actu->setActive(true);
+        _competence_actu->setPosition(mouse_clic);
 
-        carte.bouger(u);
-
+        _mana -= _competence_actu->getCoutMana(); // on enleve le pourcentage de mana voulu
     }
-    else if(_pos == _cible && _statut == DEPLACE)
-    {
-        _statut = DEBOUT;
-    }
-
-    sf::Vector2i origine = carte.getTile(0,0).getPosition();
-    origine.x += WIDTH_TILE/2;
-
-    _pos = CartesienAIsometrique(origine, _actu.getPosition() + sf::Vector2i(WIDTH_PERSONNAGE/2, 72));
-
-    _actu = _anims[N_DEPLACEMENT*_statut + direction];
 }
 
-void Personnage::attaquer(const sf::Vector2i cible)
+void Personnage::attaquer(const sf::Vector2< int > cible)
 {
     _cible = cible;
 
@@ -154,4 +109,126 @@ void Personnage::stop_attaquer()
 
     _cible = _pos;
 }
+
+void Personnage::actualiser(std::vector< Entite* > entites)
+{
+    if(_pos != _chemin[0] && _statut == DEPLACE)
+    {
+        sf::Vector2< int > u;
+
+        actualiser_direction(_chemin[0]);
+
+        // deplacement de la map
+        switch(_direction)
+        {
+            case B:
+                u.y -= _vitesse*5;
+            break;
+            case H:
+                u.y += _vitesse*5;
+            break;
+            case D:
+                u.x -= _vitesse*5;
+            break;
+            case G:
+                u.x += _vitesse*5;
+            break;
+            case BG:
+                u.y -= _vitesse*3;
+                u.x += _vitesse*4;
+            break;
+            case HG:
+                u.y += _vitesse*3;
+                u.x += _vitesse*4;
+            break;
+            case BD:
+                u.y -= _vitesse*3;
+                u.x -= _vitesse*4;
+            break;
+            case HD:
+                u.y += _vitesse*3;
+                u.x -= _vitesse*4;
+            break;
+            default:
+            break;
+        }
+
+        sf::Vector2< int > t = cartesienVersIsometrique< int >(_carte, _actu->getPosition() + sf::Vector2< int >(WIDTH_PERSONNAGE/2, _profondeur) + sf::Vector2< int >(3*u.x, 3*u.y));
+
+        if(_carte->getTile(t.x, t.y).getCollision())
+        {
+            _carte->bouger(u);
+
+            for(unsigned int i = 0; i < _competences.size(); i++)
+            {
+                _competences[i]->setPosition(_competences[i]->getPosition() + u);
+            }
+
+            for(unsigned int i = 0; i < entites.size(); i++)
+                entites[i]->setPosition(entites[i]->getPosition() + u);
+        }
+        else
+        {
+            _statut = DEBOUT;
+        }
+    }
+    else if(_pos == _chemin[0] && _statut == DEPLACE)
+    {
+        if(_chemin.size() > 1)
+            _chemin.erase(_chemin.begin(), _chemin.begin() + 1);
+        else
+            _statut = DEBOUT;
+    }
+    else if(_statut == ATTAQUE)
+    {
+        actualiser_direction(_cible);
+    }
+
+    _pos = cartesienVersIsometrique< int >(_carte, _actu->getPosition() + sf::Vector2< int >(WIDTH_PERSONNAGE/2, _profondeur));
+
+    _actu = _anims[N_DEPLACEMENT*_statut + _direction];
+}
+
+void Personnage::setCarte(Carte* carte, sf::Vector2< int > pos)
+{
+    _carte = carte;
+
+    _pos = pos;
+
+    sf::Vector2< int > u;
+
+    u.x = WINDOW_WIDTH/2 - _carte->getTile(_pos.x ,_pos.y).getPosition().x + WIDTH_TILE/2;
+    u.y = WINDOW_HEIGHT/2 - _carte->getTile(_pos.x ,_pos.y).getPosition().y + HEIGHT_TILE/2;
+
+    _carte->bouger(u);
+
+    for(unsigned int i = 0; i < _competences.size(); i++)
+        _competences[i]->setPosition(u);
+}
+
+Carte* Personnage::getCarte()
+{
+    return _carte;
+}
+
+std::vector< Competence* > Personnage::getCompetences()
+{
+    return _competences;
+}
+
+void Personnage::ajouterCompetence(Competence* competence)
+{
+    _competences.push_back(competence);
+}
+
+void Personnage::setCompetenceActu(Competence* competence_actu)
+{
+    _competence_actu = competence_actu;
+}
+
+Competence* Personnage::getCompetenceActu()
+{
+    return _competence_actu;
+}
+
 

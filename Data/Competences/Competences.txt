@@ -1,0 +1,5 @@
+Data//Competences//explosion_feu.txt
+Data//Competences//eclair.txt
+Data//Competences//perception.txt
+Data//Competences//soin.txt
+$

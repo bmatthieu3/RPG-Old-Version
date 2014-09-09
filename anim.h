@@ -1,29 +1,37 @@
 #ifndef ANIM_H
 #define ANIM_H
 
-class anim
+class Anim
 {
     public:
 
-        anim();
-        anim(const std::string fichier, int width_sprite, int height_sprite, const sf::Vector2i position, int n_frames, int first_frame, sf::Time t_anim);
-        ~anim();
+        Anim();
+
+        Anim(const std::string fichier, int width_sprite, int height_sprite, const sf::Vector2< int > position, int n_frames, int first_frame, sf::Time t_anim);
+
+        ~Anim();
 
         void afficher(sf::RenderWindow* window);
 
-        bool charger(const std::string fichier, int width_sprite, int height_sprite, const sf::Vector2i position, int n_frames, int first_frame, sf::Time t_anim);
+        void setPosition(sf::Vector2< int > pos);
 
-        void setPosition(sf::Vector2f& pos);
-
-        sf::Vector2i& getPosition();
+        sf::Vector2< int > getPosition();
 
         sf::Time getTempsEcoule();
 
-        anim operator=(const anim& copie);
+        int getWidth() const;
+
+        int getHeight() const;
+
+        void setColorToAlpha(sf::Color& color);
+
+        std::vector< sf::VertexArray >& getVertexArrays();
 
     private:
 
-        sf::Texture _charset;
+        sf::Image _charset;
+        sf::Texture _charset_tex;
+
         std::vector< sf::VertexArray > _sprites;
         sf::Time _t_anim;
 

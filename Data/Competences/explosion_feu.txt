@@ -1,0 +1,21 @@
+Data//Competences//explosion_feu.png
+
+Data//Interface//icones//feu.png
+0 120 0
+
+192
+192
+20
+800
+
+2.5
+1
+2
+3
+5
+1.5
+0.8
+20
+Explosion massive #
+Invoque une explosion causant des degats a toutes entites proches de la zone d'impact. Sort de zone #
+$

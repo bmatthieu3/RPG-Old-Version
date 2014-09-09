@@ -5,39 +5,50 @@
 #include "matrix.h"
 #include "constantes.h"
 
-float dot(sf::Vector2f& a, sf::Vector2f& b)
+Noeud::Noeud() : _f(0.0f), _g(0.0f), _h(0.0f)
 {
-    return a.x*b.x + a.y*b.y;
+    _parent = NULL;
 }
 
-float det(sf::Vector2f& a, sf::Vector2f& b)
+Noeud::~Noeud()
 {
-    return a.x*b.y - a.y*b.x;
+    delete _parent;
 }
 
-float norme(sf::Vector2f& a)
+void Noeud::setProprietes(const float g, const float h)
 {
-    return sqrt(a.x*a.x + a.y*a.y);
+    _g = g;
+    _h = h;
+
+    _f = _g + _h;
 }
 
-float angle(sf::Vector2f& a, sf::Vector2f& b)
+void Noeud::setParent(Noeud* parent)
 {
-    float theta = acosf(dot(a, b)/(norme(a)*norme(b)));
-
-    if((det(a, b)/(norme(a)*norme(b))) < 0)
-    {
-        theta = 2*PI - theta;
-    }
-
-    return theta;
+    _parent = parent;
 }
 
-sf::Vector2i& CartesienAIsometrique(sf::Vector2i origine, sf::Vector2i coordCartesien)
+float Noeud::get_h() const
 {
-    sf::Vector2i coordIsometrique;
+    return _h;
+}
 
-    coordIsometrique.x = (int)(floor(-coordCartesien.x/64.0 + coordCartesien.y/32.0 + (origine.x - 2*origine.y)/64.0));
-    coordIsometrique.y = (int)(floor(coordCartesien.x/64.0 + coordCartesien.y/32.0 - (origine.x + 2*origine.y)/64.0));
+float distance(const sf::Vector2< float > vec_1, const sf::Vector2< float > vec_2)
+{
+    return std::sqrt(std::pow(vec_1.x - vec_2.x, 2) + std::pow(vec_1.y - vec_2.y, 2));
+}
 
-    return coordIsometrique;
+float cos(sf::Vector2< float > vec1, sf::Vector2< float > vec2)
+{
+    return float((vec1.x*vec2.x + vec1.y*vec2.y)/(norme(vec1)*norme(vec2)));
+}
+
+float sin(sf::Vector2< float > vec1, sf::Vector2< float > vec2)
+{
+    return float((vec1.x*vec2.y - vec1.y*vec2.x)/(norme(vec1)*norme(vec2)));
+}
+
+float norme(sf::Vector2< float > vec)
+{
+    return std::sqrt(std::pow(vec.x, 2) + std::pow(vec.y, 2));
 }

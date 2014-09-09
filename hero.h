@@ -3,36 +3,52 @@
 
 #include "anim.h"
 #include "map.h"
+#include "competence.h"
+#include "entite.h"
 
-enum{B, BD, D, HD, H, HG, G, BG, N_DEPLACEMENT};
-enum{DEPLACE, DEBOUT, ATTAQUE};
 
-class Personnage
+class Personnage : public Entite
 {
     public:
 
-        Personnage(Carte& carte);
-        ~Personnage();
+        Personnage();
 
-        void afficher(sf::RenderWindow* window);
+        Personnage(const std::string nom, Carte* carte, const sf::Vector2< int > pos);
 
-        void actualiser(Carte& carte);
+        virtual ~Personnage();
 
-        void deplacer(const sf::Vector2i cible);
-        void attaquer(const sf::Vector2i cible);
+        // Méthodes graphiques
+
+        void setCarte(Carte* carte, sf::Vector2< int > pos);
+
+        Carte* getCarte();
+
+        // Méthodes gameplay
+
+        virtual void actualiser(std::vector< Entite* > entites);
+
+        virtual void deplacer(const sf::Vector2< int > arrive);
+
+        void attaquer(const sf::Vector2< int > cible);
 
         void stop_attaquer();
 
+        void lancerCompetence(const sf::Vector2< int > mouse_clic);
+
+
+        void ajouterCompetence(Competence* competence);
+
+        void setCompetenceActu(Competence* competence_actu);
+
+        std::vector< Competence* > getCompetences();
+
+        Competence* getCompetenceActu();
+
     private:
 
-        std::vector< anim > _anims;
-        anim _actu;
-        int _statut;
+        std::vector< Competence* > _competences;
 
-        int _vie, _mana;
-
-        sf::Vector2i _pos;
-        sf::Vector2i _cible;
+        Competence* _competence_actu;
 };
 
 #endif

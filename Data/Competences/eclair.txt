@@ -1,0 +1,23 @@
+Data//Competences//eclair.png
+
+Data//Interface//icones//foudre.png
+0 255 0
+192
+
+192
+
+50
+
+500
+
+3
+0.1
+2
+3
+5
+2
+1
+5
+Foudre #
+Appelle la force de la foudre afin d'infliger d important degats à la cible. Sort instantane #
+$

@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="Cursed-Crown" />
+		<Option pch_mode="2" />
+		<Option compiler="gcc" />
+		<Build>
+			<Target title="Debug">
+				<Option output="bin/Debug/Cursed-Crown" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Debug/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-g" />
+					<Add directory="include" />
+				</Compiler>
+				<Linker>
+					<Add library="sfml-graphics-d" />
+					<Add library="sfml-window-d" />
+					<Add library="sfml-system-d" />
+				</Linker>
+			</Target>
+			<Target title="Release">
+				<Option output="bin/Release/Cursed-Crown" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Release/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-O2" />
+					<Add directory="include" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+					<Add library="sfml-graphics" />
+					<Add library="sfml-window" />
+					<Add library="sfml-system" />
+				</Linker>
+			</Target>
+		</Build>
+		<Compiler>
+			<Add option="-Wall" />
+			<Add directory="C:/SFML-2.1/include" />
+		</Compiler>
+		<Linker>
+			<Add library="C:\Program Files\CodeBlocks\MinGW\lib\liblua5.2.a" />
+			<Add library="C:\Program Files\CodeBlocks\MinGW\lib\libluabind.a" />
+			<Add directory="C:/SFML-2.1/lib" />
+		</Linker>
+		<Unit filename="anim.cpp" />
+		<Unit filename="anim.h" />
+		<Unit filename="barre_etat.cpp" />
+		<Unit filename="barre_etat.h" />
+		<Unit filename="boite.cpp" />
+		<Unit filename="boite.h" />
+		<Unit filename="clickable.cpp" />
+		<Unit filename="clickable.h" />
+		<Unit filename="competence.cpp" />
+		<Unit filename="competence.h" />
+		<Unit filename="constantes.h" />
+		<Unit filename="editeur.cpp" />
+		<Unit filename="editeur.h" />
+		<Unit filename="entite.cpp" />
+		<Unit filename="entite.h" />
+		<Unit filename="fenetre.cpp" />
+		<Unit filename="fenetre.h" />
+		<Unit filename="hero.cpp" />
+		<Unit filename="hero.h" />
+		<Unit filename="jeu.cpp" />
+		<Unit filename="jeu.h" />
+		<Unit filename="main.cpp" />
+		<Unit filename="map.cpp" />
+		<Unit filename="map.h" />
+		<Unit filename="matrix.cpp" />
+		<Unit filename="matrix.h" />
+		<Unit filename="objet.cpp" />
+		<Unit filename="objet.h" />
+		<Unit filename="parser.cpp" />
+		<Unit filename="parser.h" />
+		<Unit filename="pathfinder.cpp" />
+		<Unit filename="pathfinder.h" />
+		<Unit filename="squelette.lua" />
+		<Extensions>
+			<code_completion />
+			<envvars />
+			<debugger />
+			<lib_finder disable_auto="1" />
+		</Extensions>
+	</Project>
+</CodeBlocks_project_file>
